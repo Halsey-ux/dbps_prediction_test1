@@ -3,24 +3,14 @@ import pandas as pd
 import numpy as np
 import pickle
 from PIL import Image
-import os
 
 # 配置页面
 st.set_page_config(
     page_title="DBPs预测模型",
     page_icon="🧪",
     layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-        'Get Help': 'https://github.com/Halsey-ux/dbps_prediction_test1/issues',
-        'Report a bug': 'https://github.com/Halsey-ux/dbps_prediction_test1/issues',
-        'About': '# DBPs预测模型\n 此应用使用机器学习预测饮用水中的消毒副产物(DBPs)含量。'
-    }
+    initial_sidebar_state="expanded"
 )
-
-# 设置缓存目录
-if not os.path.exists('.cache'):
-    os.makedirs('.cache')
 
 # 添加页面标题和样式
 st.title("消毒副产物(DBPs)预测模型")
@@ -37,19 +27,8 @@ st.markdown("""
 .stButton>button:hover {
     background-color: #45a049;
 }
-.reportview-container {
-    background: #fafafa;
-}
-.sidebar .sidebar-content {
-    background: #ffffff;
-}
 </style>
 """, unsafe_allow_html=True)
-
-# 添加访问统计
-if 'visitor_count' not in st.session_state:
-    st.session_state.visitor_count = 0
-st.session_state.visitor_count += 1
 
 st.markdown("""
 ### 欢迎使用DBPs预测系统
@@ -57,11 +36,10 @@ st.markdown("""
 * **开发者:** 化学机器学习实验室
 * **数据来源:** 实验室测试数据
 * **模型类型:** 随机森林回归
-* **访问次数:** {}
-""".format(st.session_state.visitor_count))
+""")
 
 # 加载模型和标准化器
-@st.cache_resource(show_spinner=True)
+@st.cache_resource
 def load_model():
     try:
         with open('model.pkl', 'rb') as f:
@@ -93,8 +71,7 @@ with st.sidebar:
                            help="接触时间范围：0-168小时")
 
 # 创建特征数据框
-@st.cache_data
-def create_features(ph, temperature, cl2_dose, doc, bromide, contact_time):
+def create_features():
     return pd.DataFrame({
         'pH': [ph],
         'Temperature': [temperature],
@@ -114,7 +91,7 @@ with col1:
             with st.spinner('正在计算中...'):
                 model, scaler = load_model()
                 if model is not None and scaler is not None:
-                    features = create_features(ph, temperature, cl2_dose, doc, bromide, contact_time)
+                    features = create_features()
                     
                     # 显示输入参数
                     st.write("#### 输入参数:")
@@ -127,14 +104,6 @@ with col1:
                     # 显示预测结果
                     st.write("#### 预测的DBPs浓度:")
                     st.success(f"{prediction:.2f} μg/L")
-                    
-                    # 添加置信区间
-                    predictions = []
-                    for estimator in model.estimators_:
-                        predictions.append(estimator.predict(features_scaled)[0])
-                    
-                    confidence_interval = np.percentile(predictions, [2.5, 97.5])
-                    st.write(f"95%置信区间: [{confidence_interval[0]:.2f}, {confidence_interval[1]:.2f}] μg/L")
         except Exception as e:
             st.error(f"预测过程中出现错误: {str(e)}")
 
@@ -162,11 +131,6 @@ with st.expander("使用说明", expanded=False):
     - **DOC**: 溶解性有机碳含量
     - **溴离子**: 水中溴离子浓度
     - **接触时间**: 消毒剂与水样接触时间
-
-    ### 注意事项
-    - 请确保输入参数在合理范围内
-    - 模型预测结果仅供参考
-    - 如有问题请联系技术支持
     """)
 
 # 添加页脚
