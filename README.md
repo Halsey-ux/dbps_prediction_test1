@@ -1,103 +1,86 @@
-# DBPs预测模型
+# DBPs (消毒副产物) 预测系统
 
-这是一个基于机器学习的消毒副产物(DBPs)预测Web应用程序。该应用程序使用随机森林回归模型来预测给定水质参数下的DBPs浓度。
+这是一个基于机器学习的消毒副产物(DBPs)预测系统，使用Flask框架开发的Web应用程序。该系统能够预测水处理过程中形成的消毒副产物的浓度。
 
-## 在线访问
+## 功能特点
 
-公开访问地址：https://dbps-prediction.streamlit.app
+- 基于机器学习模型的DBPs浓度预测
+- 响应式Web界面设计
+- 实时预测结果显示
+- 特征重要性可视化
+- 数据验证和错误处理
 
-## 本地部署
+## 技术栈
 
-### 安装要求
+- Python 3.8+
+- Flask
+- scikit-learn
+- pandas
+- numpy
+- Bootstrap 5
+- Vercel (部署平台)
 
-1. Python 3.8+
-2. 依赖包安装：
+## 安装说明
+
+1. 克隆仓库：
+```bash
+git clone https://github.com/Halsey-ux/dbps_prediction_test1.git
+cd dbps_prediction_test1
+```
+
+2. 创建并激活虚拟环境：
+```bash
+conda env create -f environment.yml
+conda activate dbps_env
+```
+
+3. 安装依赖：
 ```bash
 pip install -r requirements.txt
 ```
 
-### 使用说明
+## 本地运行
 
-1. 首先训练模型：
+1. 启动Flask应用：
 ```bash
-python train_model.py
+python app.py
 ```
 
-2. 启动Web应用：
-```bash
-streamlit run app.py
+2. 在浏览器中访问：
+```
+http://localhost:5000
 ```
 
-3. 在浏览器中访问应用：
-   - 本地访问：http://localhost:8501
-   - 局域网访问：http://192.168.1.116:8501
-   - 公网访问：http://207.174.7.167:8501
+## 在线访问
 
-## Streamlit Cloud部署
-
-1. Fork这个项目到你的GitHub账号
-2. 访问 https://share.streamlit.io/
-3. 使用GitHub账号登录
-4. 点击 "New app" 并选择你fork的仓库
-5. 选择main分支和app.py文件
-6. 点击 "Deploy"
-
-部署完成后，你会得到一个类似 https://your-app-name.streamlit.app 的永久访问地址。
-
-## 输入参数说明
-
-- pH值：6.0-9.0
-- 温度：15.0-35.0 °C
-- 氯投加量：0.0-10.0 mg/L
-- 溶解性有机碳：0.0-20.0 mg/L
-- 溴离子浓度：0.0-1000.0 μg/L
-- 接触时间：0.0-168.0 h
-
-## 模型说明
-
-- 模型类型：随机森林回归
-- 特征工程：标准化处理
-- 评估指标：MSE、R²、交叉验证得分
+您可以通过以下链接访问已部署的应用：
+[DBPs预测系统](https://dbps-prediction-test1.vercel.app)
 
 ## 项目结构
 
 ```
-dbps-prediction/
-├── app.py              # Streamlit Web应用
-├── train_model.py      # 模型训练脚本
-├── requirements.txt    # 项目依赖
-├── model.pkl          # 训练好的模型
-├── scaler.pkl        # 特征标准化器
-└── feature_importance.png  # 特征重要性图
+├── app.py                 # Flask应用主文件
+├── requirements.txt       # Python依赖
+├── model.pkl             # 训练好的机器学习模型
+├── scaler.pkl            # 数据标准化模型
+├── feature_importance.png # 特征重要性可视化
+├── train_model.py        # 模型训练脚本
+├── static/              # 静态资源文件
+├── templates/           # HTML模板
+└── vercel.json         # Vercel部署配置
 ```
 
-## 注意事项
+## 使用说明
 
-- 请确保输入参数在合理范围内
-- 模型预测结果仅供参考
-- 建议定期使用新数据更新模型
+1. 在网页界面输入所需的水质参数
+2. 点击"预测"按钮
+3. 系统将显示预测的DBPs浓度结果
+4. 可以查看特征重要性图表，了解各参数的影响程度
 
-## 部署说明
+## 开发者
 
-### 本地部署
-适用于个人使用或开发测试。
-
-### Streamlit Cloud部署（推荐）
-- 免费托管
-- 自动更新
-- 永久域名
-- SSL加密
-- 无需服务器维护
-
-### 自托管服务器部署
-如果需要自定义域名或特殊配置，可以在自己的服务器上部署。
-
-## 联系方式
-
-如有问题或建议，请联系：
-- 邮箱：your.email@example.com
-- 项目主页：https://github.com/your-username/dbps-prediction
-- 在线演示：https://dbps-prediction.streamlit.app
+- GitHub: [Halsey-ux](https://github.com/Halsey-ux)
+- Email: 2489762201@qq.com
 
 ## 许可证
 
