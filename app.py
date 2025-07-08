@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import pandas as pd
 import numpy as np
 import pickle
@@ -49,8 +49,16 @@ model, scaler = load_model()
 
 @app.route('/')
 def home():
-    logger.info("访问主页")
-    return render_template('index.html')
+    try:
+        logger.info("访问主页")
+        return render_template('index.html')
+    except Exception as e:
+        logger.error(f"渲染主页时出错: {str(e)}")
+        return str(e), 500
+
+@app.route('/static/<path:path>')
+def send_static(path):
+    return send_from_directory('static', path)
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -91,6 +99,19 @@ def predict():
         logger.error(f"预测过程中出错: {str(e)}")
         return jsonify({'error': '预测过程中发生错误'}), 500
 
+@app.route('/health')
+def health_check():
+    """健康检查端点"""
+    return jsonify({
+        'status': 'healthy',
+        'model_loaded': model is not None,
+        'scaler_loaded': scaler is not None
+    })
+
+# Vercel需要这个应用实例
+app.debug = True
+application = app
+
 if __name__ == '__main__':
-    print("Starting Flask application...")
-    app.run(host='127.0.0.1', port=5000, debug=True) 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port) 
