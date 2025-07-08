@@ -3,7 +3,15 @@
     "builds": [
         {
             "src": "app.py",
-            "use": "@vercel/python"
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "15mb",
+                "runtime": "python3.9"
+            }
+        },
+        {
+            "src": "static/**",
+            "use": "@vercel/static"
         }
     ],
     "routes": [
@@ -12,16 +20,13 @@
             "dest": "/static/$1"
         },
         {
-            "src": "/favicon.ico",
-            "dest": "/static/favicon.ico"
-        },
-        {
             "src": "/(.*)",
             "dest": "/app.py"
         }
     ],
     "env": {
         "FLASK_ENV": "production",
-        "FLASK_APP": "app.py"
+        "FLASK_APP": "app.py",
+        "PYTHONPATH": "."
     }
 } 
