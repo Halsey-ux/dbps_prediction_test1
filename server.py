@@ -1,11 +1,8 @@
-from http.server import HTTPServer, SimpleHTTPRequestHandler
+from app import app
 import os
 
-# 设置工作目录
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-# 创建HTTP服务器
-server_address = ('', 8000)
-httpd = HTTPServer(server_address, SimpleHTTPRequestHandler)
-print('Starting server on port 8000...')
-httpd.serve_forever() 
+if __name__ == '__main__':
+    # Get port from environment variable or default to 5000
+    port = int(os.environ.get('PORT', 5000))
+    # Run the app
+    app.run(host='0.0.0.0', port=port) 
